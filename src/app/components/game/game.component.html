@@ -1,0 +1,42 @@
+<div class="container"> 
+
+    <div class="header-section">
+        <div class="title">
+            <h1>Cards Memory Game</h1>
+        </div>
+        <div class="statistics">
+            <p>Timer: {{ formattedTime }}</p>
+            <p>Moves: {{ moves }}</p>
+        </div>
+    </div>
+
+    <div class="game-section">
+
+        <div class="card-section">
+            <div class="pairs" *ngIf="!gameStarted">
+                <app-header (gameStart)="onGameStart($event)"></app-header>
+            </div>
+
+            <div class="cards" *ngIf="gameStarted && !isGameOver">
+                <div class="grid" [attr.data-pairs]="cards.length / 2">
+                    <div *ngFor="let card of cards" class="card" (click)="flipCard(card)">
+                        <img *ngIf="card.isFlipped || card.isMatched" [src]="card.image" alt="card front">
+                        <img *ngIf="!card.isFlipped && !card.isMatched" src="/assets/card-back.jpg" alt="card back">
+                    </div>
+                </div>
+                <button (click)="restartGame()">Retry</button>
+            </div>
+
+            <div class="game-over-section" *ngIf="isGameOver">
+                <app-game-over
+                    [isGameOver]="isGameOver"
+                    [moves]="moves"
+                    (restartGame)="restartGame()"
+                    >
+                </app-game-over>
+            </div>
+        </div>
+
+    </div>
+
+</div>
