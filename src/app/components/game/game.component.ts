@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Card } from '../../models/card.model';
 import { HeaderComponent } from "../header/header.component";
 import { GameOverComponent } from '../game-over/game-over.component';
+import { delay, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -24,6 +25,8 @@ export class GameComponent implements OnInit {
   isGameLost: boolean = false;
   private IntervalId: any;
   MAX_MOVES: number = 20;
+  selectPairs: number[] = [4, 6, 8, 10, 12];
+  flippedCardsSubject = new Subject<void>();
 
 
 
@@ -32,16 +35,17 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     this.startGame(6);
     this.gameStarted = false;
+    this.flippedCardsSubject.pipe(delay(800)).subscribe(() => this.checkForMatch());
   }
 
-  onGameStart(selectedPairs: number) {
-    this.startGame(selectedPairs);
+  onGameStart(selectPairs: number) {
+    this.startGame(selectPairs);
     this.IntervalId = setInterval(() => {
       this.counter++}, 1000);
   }
 
-  startGame(selectedPairs: number) {
-    this.cards = this.gameService.getShuffledCards(selectedPairs);
+  startGame(selectPairs: number) {
+    this.cards = this.gameService.getShuffledCards(selectPairs);
     this.counter = 0;
     this.moves = 0;
     this.isGameOver = false;
@@ -69,7 +73,7 @@ export class GameComponent implements OnInit {
 
     if (this.flippedCards.length === 2) {
       this.isCheckingMatch = true;
-      setTimeout(() => this.checkForMatch(), 500);
+      this.flippedCardsSubject.next();
     }
   }
 
@@ -83,10 +87,8 @@ export class GameComponent implements OnInit {
       second.isMatched = true;
       this.moves++;
     } else {
-      setTimeout(() => {
-        first.isFlipped = false;
-        second.isFlipped = false;
-      }, 500);
+      first.isFlipped = false;
+      second.isFlipped = false;
       this.moves++;
     }
 
@@ -98,7 +100,7 @@ export class GameComponent implements OnInit {
     }
 
     this.flippedCards = [];
-    setTimeout(() => (this.isCheckingMatch = false), 500);
+    this.isCheckingMatch = false;
 
     if (this.cards.every(card => card.isMatched)) {
       this.isGameOver = true;

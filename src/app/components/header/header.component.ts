@@ -10,6 +10,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class HeaderComponent {
   
+  @Input() selectPairs!: number[];
   @Output() gameStart = new EventEmitter<number>();
 
   startGame(pairs: number) {
