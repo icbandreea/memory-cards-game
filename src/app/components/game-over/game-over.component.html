@@ -1,7 +1,13 @@
 
-@if (isGameOver) {
+@if (isGameOver && !isGameLost) {
     <p> You won in {{ moves }} moves!</p>
     <p>Want to try again?</p>
     <button (click)="tryAgain()">Try again</button>
 } 
+
+@if(isGameLost) {
+    <p> You lost! You have to match all cards {{MAX_MOVES}} moves.</p>
+    <p>Want to try again?</p>
+    <button (click)="tryAgain()">Try again</button>
+}
 

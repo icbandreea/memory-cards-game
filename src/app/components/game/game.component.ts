@@ -21,7 +21,9 @@ export class GameComponent implements OnInit {
   isCheckingMatch: boolean = false;
   gameStarted: boolean = false;
   counter: number = 0;
+  isGameLost: boolean = false;
   private IntervalId: any;
+  MAX_MOVES: number = 20;
 
 
 
@@ -43,6 +45,7 @@ export class GameComponent implements OnInit {
     this.counter = 0;
     this.moves = 0;
     this.isGameOver = false;
+    this.isGameLost = false;
     this.flippedCards = [];
     this.isCheckingMatch = false;
     this.gameStarted = true;
@@ -52,6 +55,7 @@ export class GameComponent implements OnInit {
   restartGame() {
     this.gameStarted = false;
     this.isGameOver = false;
+    this.isGameLost = false;
     this.counter = 0;
     this.moves = 0;
     clearInterval(this.IntervalId);
@@ -86,6 +90,13 @@ export class GameComponent implements OnInit {
       this.moves++;
     }
 
+    if(this.moves >= this.MAX_MOVES) {
+      this.isGameLost = true;
+      this.isGameOver = true;
+      clearInterval(this.IntervalId);
+      this.counter = 0;
+    }
+
     this.flippedCards = [];
     setTimeout(() => (this.isCheckingMatch = false), 500);
 
@@ -94,6 +105,8 @@ export class GameComponent implements OnInit {
       clearInterval(this.IntervalId);
       this.counter = 0;
     }
+
+
   }
 
   get formattedTime(): string {

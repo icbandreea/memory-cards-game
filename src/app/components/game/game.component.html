@@ -6,7 +6,7 @@
         </div>
         <div class="statistics">
             <p>Timer: {{ formattedTime }}</p>
-            <p>Moves: {{ moves }}</p>
+            <p>Moves: {{ moves }}/{{MAX_MOVES}}</p>
         </div>
     </div>
 
@@ -30,6 +30,8 @@
             <div class="game-over-section" *ngIf="isGameOver">
                 <app-game-over
                     [isGameOver]="isGameOver"
+                    [isGameLost]="isGameLost"
+                    [MAX_MOVES]="MAX_MOVES"
                     [moves]="moves"
                     (restartGame)="restartGame()"
                     >
